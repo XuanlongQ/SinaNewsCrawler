@@ -21,22 +21,25 @@ class LookUp(threading.Thread):
         while queue_viewhref.qsize() > 0:
             # 在线程池中取得链接和序号
             viewhref_and_id=queue_viewhref.get()
-            id=viewhref_and_id[0]
-            viewhref=viewhref_and_id[1]
+            # id=viewhref_and_id[0]
+            # viewhref=viewhref_and_id[1]
+            
+            viewhref=viewhref_and_id[0] # xuanlong update
+            print(viewhref)
             mutex_href_get.release()
 
             # 调用get_page函数
             result = get_page(viewhref)
-            print('1111111111111111111111111111111111111122222222222222')
             print(result)
             print('111' * 10)
             try:
                 mutex_href_put.acquire()
-                print(str(type(result)))
+                # print(str(type(result)))
                 if str(type(result)) == "<class 'list'>":
                     # 存储
                     #print(len(result))
-                    saveInfo(id,viewhref,result)
+                    saveInfo(viewhref,result) # xuanlong update
+                    # saveInfo(id,viewhref,result)
                 elif result == 1: #连接错误
                     logContentConnectError(viewhref)
                     pass
@@ -46,7 +49,7 @@ class LookUp(threading.Thread):
                 mutex_href_put.release()
             except:
                 traceback.print_exc()
-                print('shittttttttttttttttttt')
+                print('error')
                 mutex_href_put.release()
                 mutex_href_get.acquire()
                 continue
@@ -65,7 +68,15 @@ def get_some():
     mutex_href_get = threading.Lock()
     mutex_href_put = threading.Lock()
 
-    hrefs=readUrls()
+    hrefs=readUrls() # xuanlong update
+    # xuanlong update
+    for href in hrefs:
+        r = get_page(href)
+        saveInfo(href,r)
+        print('------done------')
+        
+        
+    
     if hrefs==1: #数据库读取错误
         return -2
     for item in hrefs:
@@ -88,19 +99,26 @@ def get_some():
         return -1
 
 def get_all():
+    r = get_some() # xuanlong update
 
-    while True:
-        r=get_some()
-        if r == -2:
-            print("数据获取失败")
-        elif r<=0:
-            print("数据获取完毕")
-            break
+    # while True:
+    #     r=get_some()
+    #     if r == -2:
+    #         print("数据获取失败")
+    #     elif r<=0:
+    #         print("数据获取完毕")
+    #         break
+
+# xuanlong update 取发布
+def get_pubtime_by_url(url):
+    m = re.search(r'(20\d{2})[/:-]([0-1]?\d)[/:-]([0-3]?\d)', url)
+    res = '-'.join(m.groups()) if m else None
+    return res
 
 def get_page(viewhref):
     #viewhref = "http://finance.sina.com.cn/roll/2016-08-26/doc-ifxvitex8965842.shtml"
     print(viewhref)
-    time.sleep(1.5)
+    time.sleep(0.5)
     try:
         r = requests.get(viewhref, timeout=30) #不用加上headers
         r.encoding = r.apparent_encoding
@@ -161,11 +179,16 @@ def get_page(viewhref):
         if type(i.getText()) == str:
             ptext = ptext + i.getText().replace(u'\u3000', u' ').replace(u'\xa0', u' ') + "\n"
 
+    # 提取发布时间
+    publishTime = str(get_pubtime_by_url(viewhref))
+    
     nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-    result = [title, keywords, descript, h1text, strongtext, ptext,nowtime]
-
+    # result = [title, keywords, descript, h1text, strongtext, ptext,nowtime]
+    result = [publishTime, title, keywords, descript, ptext]
+    
     print(result)
 
     return result
+
 if __name__=='__main__':
     get_all()

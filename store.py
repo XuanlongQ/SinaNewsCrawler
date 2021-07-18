@@ -1,15 +1,18 @@
 #coding=utf-8
 import pymysql
 import traceback
-#数据库信息
-host="10.245.144.96"
-user="user"
-passwd="123456"
-charset="utf8"
-database="sinanews2"
-urlTable="newsurl"
-contentTable="newscontent"
+import json
 
+#数据库信息
+host="xxx"
+user="xxx"
+passwd="xxx"
+charset="utf8"
+database="xxx"
+urlTable="xxx"
+contentTable="xxx"
+
+'''
 #----------------Mysql操作---------------------------------
 def saveUrls(hreflist):  # tagname在此默认与table名称相同
     try:
@@ -28,9 +31,34 @@ def saveUrls(hreflist):  # tagname在此默认与table名称相同
         conn.rollback()
     finally:
         conn.close()
+'''      
+#----------------Saveurl操作---------------------------------
+# list:
+    # result.extend([[i, '财经','0', nowtime] for i in financelist])
+    # result.extend([[i, '科技', '0', nowtime] for i in techlist])
+    # result.extend([[i, '体育','0', nowtime] for i in sportslist])
+    # result.extend([[i, '娱乐', '0', nowtime] for i in entlist])
+    # result.extend([[i, '汽车', '0', nowtime] for i in autolist])
+    # result.extend([[i, '教育', '0', nowtime] for i in edulist])
+    # result.extend([[i, '游戏', '0', nowtime] for i in gameslist])
+def saveUrls(hreflist):
+    # jsonList = []
+    # hrefItem = {}
+    # hrefItem['url'] = hreflist[0]
+    # hrefItem['type'] = hreflist[1]
+    # hrefItem['category'] = hreflist[2]
+    # hrefItem['time'] = hreflist[3]
+    # jsonList.append(hrefItem)
+    # hrefJson = json.dumps(hrefItem,ensure_ascii=False)
+    for i in hreflist:
+        print(i)
+        print('(*****未抓取的url*******)')
+        continue
+        # with open('urlList.txt','a+',encoding = 'utf-8') as fw:
+        #     fw.write(hrefJson + '\n')
+        #     fw.close()
 
-
-
+'''
 def readUrls(count=1000):
     try:
         urllist = []
@@ -53,8 +81,24 @@ def readUrls(count=1000):
         # traceback.print_exc()
         conn.close()
         return 1
+'''
+  
+# hrefs=readUrls()，def readUrls(count=1000):
+def readUrls():
+    path = r'/Users/xuanlongqin/Documents/urlList.txt'
+    hrefs = []
+    with open(path,'r',encoding= 'utf-8') as fr:
+        for newline in fr:
+            data = newline.replace('[','').replace(']','').replace("'",'').split(',')
+            # print(data[0])
+            hrefs.append(data[0])
+            # print(hrefs)
+        fr.close()
+            
+    return tuple(hrefs)
 
 
+'''
 def saveInfo(id,viewhref,result):
     try:
         conn = pymysql.connect(host=host, user=user, password=passwd, db=database, charset=charset)
@@ -78,6 +122,31 @@ def saveInfo(id,viewhref,result):
         conn.rollback()
     finally:
         conn.close()
+'''
+
+
+# result = [publishTime,title, keywords, descript, strongtext, nowtime]
+def saveInfo(viewhref,result):
+    try:
+        cPath = 'DecemberJson.txt'
+        aItem = {}
+        # aList = []
+        aItem['publishTime'] = result[0]
+        aItem['url'] = viewhref
+        aItem['title'] = result[1]
+        aItem['keywords'] = result[2]
+        aItem['descript'] = result[3]
+        aItem['content'] = result[4]
+        # aList.append(aItem)
+        # print(aList)
+        dataList = json.dumps(aItem,indent=4,ensure_ascii=False)
+        with open(cPath,'a+',encoding='utf-8') as fw:
+            fw.write(dataList + ',' + '\n')
+            fw.close()
+    except Exception as e:
+        print("错误：",str(e))
+
+    
 
 def updateErrorFlag(id):
     try:

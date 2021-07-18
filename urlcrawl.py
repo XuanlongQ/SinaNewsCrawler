@@ -124,6 +124,7 @@ def get_page(crawldate):
     gameslist=gamespat.findall(html)
 
     print(len(financelist))
+    print(financelist)
     nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
     result=[]
@@ -135,6 +136,10 @@ def get_page(crawldate):
     result.extend([[i, '教育', '0', nowtime] for i in edulist])
     result.extend([[i, '游戏', '0', nowtime] for i in gameslist])
 
+    with open('urlList.txt','a+',encoding = 'utf-8') as fw:
+        for i in result:
+            fw.write( str(i)+ '\n')
+        fw.close()
     return result
 
 #重新爬取新闻URL
