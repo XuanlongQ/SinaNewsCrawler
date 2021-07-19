@@ -18,7 +18,7 @@ create table if not exists `newscontent`(
     `description` text default null,
     `h1` text default null,
     `strong` text default null,
-    `ptext` text default null,
+    `pcontent` text default null,
     `gaintime` datetime,
 		primary key(`id`)
 )ENGINE=InnoDB  DEFAULT CHARSET=utf8;
