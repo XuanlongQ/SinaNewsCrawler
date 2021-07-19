@@ -1,5 +1,6 @@
 #coding=utf-8
 import datetime
+import time
 #input eg:20181015 (type=str)
 #output eg:20181016 (type=str)
 
