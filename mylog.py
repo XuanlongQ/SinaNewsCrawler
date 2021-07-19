@@ -1,3 +1,4 @@
+import json
 #----------------------------日志记录---------------------
 #爬取URL的界面如果加载错误，记录
 def logUrlConnectError(crawldate):
@@ -13,6 +14,7 @@ def readErrorUrl():
         datelist=f.read().splitlines()
 
     return datelist
+
 #重新爬取成功，删除log
 def deleteErrorUrl(crawldate):
     with open('error_url_connect.txt', 'r+') as f:
