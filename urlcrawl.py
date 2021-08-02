@@ -104,37 +104,39 @@ def get_page(crawldate):
 
     # 匹配某版块的新闻URL，应出现日期，且以“数字”.shtml结尾（不能以index.shtml结尾）
     # 早期网站URL以http开头，.html结尾，且日期年月日间没有“-”
-    financepat = re.compile(r'https?://finance.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
-    sportspat = re.compile(r'https?://sports.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
-    techpat=re.compile(r'https?://tech.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
-    entpat = re.compile(
-        r'https?://ent.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
-    autopat = re.compile(
-        r'https?://auto.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
-    edupat = re.compile(
-        r'https?://edu.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
-    gamespat = re.compile(
-        r'https?://games.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
-    financelist = financepat.findall(html)
-    sportslist = sportspat.findall(html)
-    techlist=techpat.findall(html)
-    entlist=entpat.findall(html)
-    autolist=autopat.findall(html)
-    edulist=edupat.findall(html)
-    gameslist=gamespat.findall(html)
-
-    print(len(financelist))
-    print(financelist)
+    # financepat = re.compile(r'https?://finance.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
+    # sportspat = re.compile(r'https?://sports.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
+    # techpat=re.compile(r'https?://tech.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
+    # entpat = re.compile(
+    #     r'https?://ent.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
+    # autopat = re.compile(
+    #     r'https?://auto.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
+    # edupat = re.compile(
+    #     r'https?://edu.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
+    # gamespat = re.compile(
+    #     r'https?://games.sina.com.cn/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
+    # financelist = financepat.findall(html)
+    # sportslist = sportspat.findall(html)
+    # techlist=techpat.findall(html)
+    # entlist=entpat.findall(html)
+    # autolist=autopat.findall(html)
+    # edulist=edupat.findall(html)
+    # gameslist=gamespat.findall(html)
+    newspat = re.compile(r'(https?://(?:\w+)\.sina\.com\.cn)/[^\[\]\<\>\"\'\s]*?/\d{4}-?\d\d-?\d\d/[^\[\]\<\>\"\'\s]*?\d+.s?html')
+    newslist = newspat.findall(html)
+    print(len(newspat))
+    print(newspat)
     nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
     result=[]
-    result.extend([[i, '财经','0', nowtime] for i in financelist])
-    result.extend([[i, '科技', '0', nowtime] for i in techlist])
-    result.extend([[i, '体育','0', nowtime] for i in sportslist])
-    result.extend([[i, '娱乐', '0', nowtime] for i in entlist])
-    result.extend([[i, '汽车', '0', nowtime] for i in autolist])
-    result.extend([[i, '教育', '0', nowtime] for i in edulist])
-    result.extend([[i, '游戏', '0', nowtime] for i in gameslist])
+    # result.extend([[i, '财经','0', nowtime] for i in financelist])
+    # result.extend([[i, '科技', '0', nowtime] for i in techlist])
+    # result.extend([[i, '体育','0', nowtime] for i in sportslist])
+    # result.extend([[i, '娱乐', '0', nowtime] for i in entlist])
+    # result.extend([[i, '汽车', '0', nowtime] for i in autolist])
+    # result.extend([[i, '教育', '0', nowtime] for i in edulist])
+    # result.extend([[i, '游戏', '0', nowtime] for i in gameslist])
+    result.extend([[i, '新闻', '0', nowtime] for i in newslist])
 
     with open('urlList.txt','a+',encoding = 'utf-8') as fw:
         for i in result:
